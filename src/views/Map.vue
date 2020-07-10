@@ -12,23 +12,18 @@
         </el-aside>
         <el-main>
             <div id="cesiumContainer" ref="getmap">
-                <div id="infoboxx">
+                <div id="infoboxx" ref="getllbox">
                 </div>
             </div>
             <div id="changelayer">
                 <input type="radio" name="checkboxName" id="1" value="1" @click="addLayer1" checked="checked"/> 矢量地图<br/>
                 <input type="radio" name="checkboxName" id="2" value="2" @click="addLayer2"/> 遥感影像<br/>
             </div>
-
-           
-
             <div id="panel">
                 <img :src="imgsrc" alt="" width="400px" height="230px">
 
             </div>
-
         </el-main>
- 
     </el-container> 
 </div>
 </template>
@@ -65,6 +60,8 @@ export default {
     getLine(){
 
     },
+    //热力图
+    //字体图标三种使用方式的区别------less和scss的使用
     //专题图
     generatorImage() {
         console.log('a');
@@ -98,55 +95,54 @@ export default {
     }, 
     //气泡窗
     getAttribute(){
-        
         var _this = this; // this.getAttr = !this.getAttr;
-//         var Cesium = this.Cesium;
+        //var Cesium = this.Cesium;
         var handler3D = new Cesium.ScreenSpaceEventHandler(_this.viewer.scene.canvas);
-            handler3D.setInputAction(function(event) {	 
-                var earthPosition = _this.viewer.camera.pickEllipsoid(event.position,_this.viewer.scene.globe.ellipsoid); //视角穿过球面点的位置
-                var cartographic = Cesium.Cartographic.fromCartesian(earthPosition, _this.viewer.scene.globe.ellipsoid, new Cesium.Cartographic());
-                console.log("视角中心笛卡尔" + earthPosition);
-                console.log("视角中心弧度" + cartographic);
-                var lat = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
-                var lng = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
-                var height=(_this.viewer.camera.positionCartographic.height/1000).toFixed(2); 
-                console.log("--------------------------------------");
-                
-                // 创建气泡窗体
-                var info = `经度：${lng}</br>纬度：${lat}</br>高度：${height}`
-                $("#infoboxx").empty();
-                $("#infoboxx").append(info);
-                $("#infoboxx").show();
-
-                // 气泡位置
-                var winpos = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
-                console.log("winpos:"+winpos);
-                var bubble = document.getElementById("infoboxx");
-                bubble.style.left = winpos.x  + 319 + "px";
-                bubble.style.top = winpos.y  + 114 + "px";
-
-                //位置跟随
-                _this.viewer.scene.postRender.addEventListener(function(e) {
-                    var newpoi = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, earthPosition);
-                // var newpoi = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
-                // console.log("newpoi"+ newpoi);
-                    if(winpos.x!=newpoi.x){
-                        
-                        winpos.x = newpoi.x;
-                        winpos.y = newpoi.y;
-                        var bubble = document.getElementById("infoboxx");
-                        bubble.style.left = winpos.x  + 319 + "px";
-                        bubble.style.top = winpos.y + 114+ "px";
-                    };
-                }
-            );
-            },Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        handler3D.setInputAction(function(event) {	 
+            var earthPosition = _this.viewer.camera.pickEllipsoid(event.position,_this.viewer.scene.globe.ellipsoid); //视角穿过球面点的位置
+            var cartographic = Cesium.Cartographic.fromCartesian(earthPosition, _this.viewer.scene.globe.ellipsoid, new Cesium.Cartographic());
+            console.log("视角中心笛卡尔" + earthPosition);
+            console.log("视角中心弧度" + cartographic);
+            var lat = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
+            var lng = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
+            var height=(_this.viewer.camera.positionCartographic.height/1000).toFixed(2); 
+            console.log("--------------------------------------");
             
-            //结束查询
-            handler3D.setInputAction(function(movement) {
-                handler3D = handler3D.destroy(); // 销毁整个鼠标事件
-                $("#infoboxx").hide();
-            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+            // 创建气泡窗体
+            var info = `经度：${lng}</br>纬度：${lat}</br>高度：${height}`
+            $("#infoboxx").empty();
+            $("#infoboxx").append(info);
+            $("#infoboxx").show();
+
+            // 气泡位置
+            var winpos = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+            console.log("winpos:"+winpos);
+            var bubble = document.getElementById("infoboxx");
+            bubble.style.left = winpos.x  + 319 + "px";
+            bubble.style.top = winpos.y  + 114 + "px";
+
+            //位置跟随
+            _this.viewer.scene.postRender.addEventListener(function(e) {
+                var newpoi = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, earthPosition);
+            // var newpoi = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+            // console.log("newpoi"+ newpoi);
+                if(winpos.x!=newpoi.x){
+                    
+                    winpos.x = newpoi.x;
+                    winpos.y = newpoi.y;
+                    var bubble = document.getElementById("infoboxx");
+                    bubble.style.left = winpos.x  + 319 + "px";
+                    bubble.style.top = winpos.y + 114+ "px";
+                };
+            }
+        );
+        },Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        
+        //结束查询
+        handler3D.setInputAction(function(movement) {
+            handler3D = handler3D.destroy(); // 销毁整个鼠标事件
+            $("#infoboxx").hide();
+        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
         
     }
   },
