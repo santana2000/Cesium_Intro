@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Use correct character set. -->
+    <meta charset="utf-8">
+    <!-- Tell IE to use the latest, best version. -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Hello World!</title>
+
+    <script src="Script/Cesium/Cesium.js"></script>
+	<script src="Script/jquery.min.js"></script>
+	<script src="Script/html2canvas.js"></script>
+	<script src="Script/canvas2image.js"></script>
+
+    <style>
+
+        @import url(Script/Cesium/Widgets/widgets.css);
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #infoboxx{
+            position: fixed;
+            /* top: 100px;
+            left: 100px; */
+            width: 200px;
+            height: 100px;
+            z-index: 99;
+            /* background-color: aquamarine; */
+            border: dodgerblue 1px solid;
+            color: black;
+            display: none;
+        }
+        #fid{
+            width: 200px;
+            height: 200px;
+            position: fixed;
+            top:50px;
+            left: 50px;
+            background-color: azure;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="getall">
+
+        <div id="cesiumContainer" style="width: 80%; height: 80%;">
+        </div>
+
+        <!-- <div style="position: fixed;top: 10px;right: 10px;color: #fff;background-color:#00000088;" id="checkboxDiv" class="form1" z-index="20">
+            <input type="radio" name="checkboxName" id="1" value="1" checked="checked"/>电子地图<br/>
+            <input type="radio" name="checkboxName" id="2" value="2" />遥感影像<br/>
+        </div> -->
+
+        <div id="infoboxx" class="el-popover">
+        </div>   
+
+        <button onclick="getInfo()">查询</button>
+        <button onclick="getPic2()">截图</button>
+        <div id="addpic">
+
+        </div>
+        <div id="fid">
+            kik
+        </div>
+    </div>
+<script>
+    //时间轴，时间等地球底部控件，不添加参数，为默认选项
+    //options对象做为配置参数
+    var viewer = new Cesium.Viewer("cesiumContainer", {
+        //放大镜图标，查找位置工具，查找到之后会将镜头对准找到的地址，默认使用bing地图
+        geocoder: false,
+        //房子图标，视角返回初始位置
+        homeButton: false,
+        //经纬网图标，选择视角的模式，有三种：3D，2D，哥伦布视图（2.5D)
+        sceneModePicker: false,
+        //地图图标，图层选择器，选择要显示的地图服务和地形服务
+        baseLayerPicker: false,
+        //问号图标，导航帮助按钮，显示默认的地图控制帮助
+        navigationHelpButton: false,
+        //动画器件，显示当前时间，允许跳转特定时间
+        animation: false,
+        //时间轴
+        timeline: false,
+        //全屏图标，全屏按钮
+        fullscreenButton: false,
+        //虚拟现实
+        vrButton: false,
+        //阴影
+        shadows: false,
+        //点击后显示详细信息
+        infoBox: false,
+        //展示数据版权属性
+        CreditsDisplay: false,
+        //imageryProvider : new Cesium.TileMapServiceImageryProvider({
+        //    url : Cesium.buildModuleUrl('Assets/Textures/NaturalEarthII')
+        //})
+
+    animation: false,  //是否显示动画控件
+    baseLayerPicker: false, //是否显示图层选择控件
+    geocoder: false, //是否显示地名查找控件
+    timeline: false, //是否显示时间线控件
+    sceneModePicker: false, //是否显示投影方式控件
+    navigationHelpButton: false, //是否显示帮助信息控件
+    infoBox: false,  //是否显示点击要素之后显示的信息
+    
+    contextOptions: {
+          webgl:{
+            alpha: true,
+            depth:true,
+            stencil:true,
+            antialias:true,
+            premultipliedAlpha:true,
+            //通过canvas.toDataURL()实现截图需要将该项设置为true
+            preserveDrawingBuffer:true,
+            failIfMajorPerformanceCaveat:true
+          }
+        },
+
+    imageryProvider: new Cesium.WebMapTileServiceImageryProvider({
+		url: "http://t0.tianditu.com/vec_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=vec&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=d6a72a78a43a2c17294b72ab26354cd6",      
+		layer: "tdtBasicLayer",
+        style: "default",
+        format: "image/jpeg",
+        tileMatrixSetID: "GoogleMapsCompatible"
+    })
+});
+    viewer._cesiumWidget._creditContainer.style.display = "none";
+
+    viewer.imageryLayers.addImageryProvider(new Cesium.WebMapTileServiceImageryProvider({ //电子地图添加中文标记
+    url: "http://t0.tianditu.com/cia_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg&tk=d6a72a78a43a2c17294b72ab26354cd6",
+    layer: "tdtAnnoLayer",
+    style: "default",
+    format: "image/jpeg",
+    tileMatrixSetID: "GoogleMapsCompatible",
+    show: false
+}));
+
+    var imgProider = new Cesium.WebMapTileServiceImageryProvider({ //电子地图添加中文标记
+      url: "http://t0.tianditu.com/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=d6a72a78a43a2c17294b72ab26354cd6",
+      layer: "tdtAnnoLayer",
+      style: "default",
+      format: "image/jpeg",
+      tileMatrixSetID: "GoogleMapsCompatible",
+      show: false
+  })
+    var imgLayer = new Cesium.ImageryLayer(imgProider,{
+        show: false
+    });
+    viewer.imageryLayers.add(imgLayer);
+
+    var imgLabelProider = new Cesium.WebMapTileServiceImageryProvider({  //影像图添加中文标记
+        url: "http://t0.tianditu.com/cva_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=cva&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg&tk=d6a72a78a43a2c17294b72ab26354cd6",
+        layer: "tdtAnnoLayer",
+        style: "default",
+        format: "image/jpeg",
+        tileMatrixSetID: "GoogleMapsCompatible"
+
+    })
+    var imgLabelLayer = new Cesium.ImageryLayer(imgLabelProider,{
+        show: false
+    });
+    viewer.imageryLayers.add(imgLabelLayer);
+
+        viewer.scene.debugShowFramesPerSecond = true; //显示帧率
+		$(document).ready(function(){
+			$('[name=checkboxName]').change(function(){
+				if(this.value == "1"){
+                    imgLayer.show = false;
+                    imgLabelLayer.show = false;
+				}else if(this.value == "2"){
+                    imgLayer.show = false;
+                    imgLabelLayer.show = false;
+				}
+			})
+		})
+        
+        // 气泡窗
+        function getInfo(){
+            //开始查询
+        var handler3D = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler3D.setInputAction(function(event) {	 
+            var pick = viewer.scene.pick(event.position);
+            console.log(pick);
+            console.log("点击位置（屏幕坐标）"+event.position); //movement.position，屏幕坐标
+            var position = viewer.scene.pickPosition(event.position);
+            console.log("点击位置笛卡尔"+position);
+            var cartographicnew = Cesium.Cartographic.fromCartesian(position);
+            console.log("点击位置弧度" + cartographicnew);
+            console.log("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+            
+            // 获取经纬度
+            var earthPosition = viewer.camera.pickEllipsoid(event.position,viewer.scene.globe.ellipsoid); //视角穿过球面点的位置
+            var cartographic = Cesium.Cartographic.fromCartesian(earthPosition, viewer.scene.globe.ellipsoid, new Cesium.Cartographic());
+            console.log("视角中心笛卡尔-首选（carmera获取）" + earthPosition);
+            console.log("视角中心弧度" + cartographic);
+            var lat = Cesium.Math.toDegrees(cartographic.latitude).toFixed(2);
+            var lng = Cesium.Math.toDegrees(cartographic.longitude).toFixed(2);
+            // var height=cartographic.height.toFixed(2);
+            var height=(viewer.camera.positionCartographic.height/1000).toFixed(2); 
+            console.log("---------------------------------------------------------------");
+            
+            // 创建气泡窗体
+            var info = `经度：${lng} </br>
+                        纬度：${lat} </br>
+                        高度：${height}
+            `
+            $("#infoboxx").empty();
+            $("#infoboxx").append(info);
+            $("#infoboxx").show();
+
+            // 气泡位置
+            var winpos = viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+            console.log("屏幕坐标1:"+winpos);
+            var bubble = document.getElementById("infoboxx");
+            bubble.style.left = winpos.x  + "px";
+            bubble.style.top = winpos.y + "px";
+
+
+
+            // 气泡位置2
+            var obj = {position:event.position};
+            var c = new Cesium.Cartesian2(obj.position.x, obj.position.y);
+            console.log("屏幕坐标2:"+c);
+            // var x = c.x-1000;
+            // var y = c.y-430 ;
+            // $('#infoboxx').css('transform', 'translate3d(' + x + 'px, ' + y + 'px, 0)'); //设置点击时 div弹出来的位置
+
+            // 监听位置
+            viewer.scene.postRender.addEventListener(function(e) {
+                // var newpoi =Cesium.SceneTransforms.wgs84ToWindowCoordinates(viewer.scene, earthPosition);
+                var newpoi = viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+
+                if(winpos.x!=newpoi.x){
+                    
+                    winpos.x =newpoi.x;
+                    winpos.y =newpoi.y;
+                    var bubble = document.getElementById("infoboxx");
+                    bubble.style.left = winpos.x  + "px";
+                    bubble.style.top = winpos.y + "px";
+                };
+                
+                }
+            );
+
+        },Cesium.ScreenSpaceEventType.LEFT_CLICK);
+        
+
+
+//结束查询
+        handler3D.setInputAction(function(movement) {
+            handler3D = handler3D.destroy(); // 销毁整个鼠标事件
+            $("#infoboxx").hide();
+
+        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+
+        }
+
+        // 截图
+        function getPic(){
+        
+                // Canvas2Image.saveAsPNG(canvas, width, height)
+                var canvas = viewer.scene.canvas;
+                //只需要定义图片的宽度（高度计算得到）
+                var imageWidth = 750;
+                //转换图片
+                var genimg = Canvas2Image.convertToImage(canvas, imageWidth, imageWidth * canvas.height / canvas.width, 'png');
+                        // console.log(opts);  
+                // console.log(canvas);  
+                console.log(genimg);  
+
+                // console.log(genimg.src);  
+                // console.log(canvas.toDataURL());  
+                let m = document.createElement("img");
+                m.setAttribute("src",genimg.src);
+                document.body.appendChild(m);
+
+                // let link = document.createElement("a");
+                // link.href = canvas.toDataURL();//下载链接
+                // link.setAttribute("download","专题图.png");
+                // link.click();
+                var sizeForm = $("#getall")[0];    //需要转化成图片的dom元素
+                html2canvas(sizeForm).then(function(canvas) {
+                    var ximg = Canvas2Image.convertToImage(canvas, imageWidth, imageWidth * canvas.height / canvas.width,'png');
+                    var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+                    save_link.href = ximg.src;
+                    save_link.download = "专题图.png";
+                    save_link.click();
+                    // var event = document.createEvent('MouseEvents');
+                    // event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                    // save_link.dispatchEvent(event);
+                });
+            };
+
+        var getPic2 = function(){
+            const opts = {
+            // scale,
+            // canvas: canvas2,
+            logging: true, //便于查看html2canvas的内部执行流程
+            // width,
+            // height,
+            // 【重要】开启跨域配置
+            allowTaint: true,
+            // useCORS: true 
+            };
+            //html2canvas插件存在的问题是，w无法对cesium模块进行捕获，但是能够对整体视图进行加载
+            html2canvas($("#cesiumContainer")[0],opts).then(canvas => {
+               
+                let link = document.createElement("a");
+                link.href = canvas.toDataURL();//下载链接
+                link.setAttribute("download","专题图.png");
+                // link.style.display = "none";//a标签隐藏
+                document.body.appendChild(link);
+                link.click();
+            })
+        }
+
+
+
+
+            // });
+            //-------------------------------------------------------------------------------------
+            // 将dom转成canvas
+        //     var dataURL;
+        //     var makeImg = function() {
+        //     // var that = this
+        //     var opts = {
+        //         logging: true, // 启用日志记录以进行调试 (发现加上对去白边有帮助)
+        //         allowTaint: true, // 否允许跨源图像污染画布
+        //         backgroundColor: null, // 解决生成的图片有白边
+        //         useCORS: true // 如果截图的内容里有图片,解决文件跨域问题
+        //     }
+        //     // eslint-disable-next-line no-undef
+        //     html2canvas($("#cesiumContainer")[0], opts).then((canvas) => {
+        //         var url = canvas.toDataURL('image/png')
+        //         dataURL = url
+        //     })
+        //     };
+
+        // // http图片转成base64，防止解决不了的图片跨域问题
+        //     var getBase64Image = function (img) {
+        //         var canvas = document.createElement('canvas')
+        //         canvas.width = img.width
+        //         canvas.height = img.height
+        //         var ctx = canvas.getContext('2d')
+        //         ctx.drawImage(img, 0, 0, img.width, img.height)
+        //         var dataURL = canvas.toDataURL('image/png') // 可选其他值 image/jpeg
+        //         return dataURL;
+        //     };
+
+
+        
+</script>
+
+</body>
+</html>
