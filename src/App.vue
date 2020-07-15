@@ -1,10 +1,12 @@
 <template>
   <div id="app">
     <div class="header">
-        <router-link to="/eleui" class="menu"><el-button >Ele-UI</el-button></router-link>&nbsp;
-        <router-link to="/chart" class="menu"><el-button >E-chart</el-button></router-link>&nbsp;
-        <router-link to="/v"  class="menu"><el-button >mapV</el-button></router-link>&nbsp;
-        <router-link to="/map"   class="menu"><el-button >Map</el-button></router-link>
+        <router-link to="/eleui" class="menu"><el-button class="btn-header" >Ele-UI</el-button></router-link>&nbsp;
+        <router-link to="/chart" class="menu"><el-button class="btn-header">E-chart</el-button></router-link>&nbsp;
+        <router-link to="/v"  class="menu">   <el-button class="btn-header">mapV</el-button></router-link>&nbsp;
+        <router-link to="/map"   class="menu"><el-button class="btn-header">Map</el-button></router-link>
+        <span class="iconfont icon-gerenzhongxin"></span>
+        <span class="iconfont icon-zhuxiao"></span>
     </div>
 
     <div class="pagebody">
@@ -41,7 +43,7 @@ html,body{
 }
 .header{
   height: 10%;
-  background-color: rgb(209, 209, 209);
+  background-color: rgb(226, 226, 226);
   /* vertical-align:middle; */
   margin-bottom:10px;
 
@@ -49,8 +51,9 @@ html,body{
 .menu{
   display: inline-block;
   margin: 20px 20px 0 0;
+  
 }
-.el-button{
+.btn-header{
   font-size: 156%;
   color: black;
 }

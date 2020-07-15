@@ -42,6 +42,7 @@ export default {
         imgsrc:''
     }
   },
+
   methods:{
     //切换图层
     addLayer1(){
@@ -229,6 +230,10 @@ export default {
         this.veclayer = veclayer;
         this.noticelayer = noticelayer;
         this.remlayer = remlayer;
+
+        viewer.camera.setView({
+            destination : Cesium.Cartesian3.fromDegrees(117.16, 32.71, 15000000.0)
+        });
 
       
 

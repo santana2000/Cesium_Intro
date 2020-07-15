@@ -1,0 +1,32 @@
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1594603009144'); /* IE9 */
+  src: url('iconfont.eot?t=1594603009144#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAQEAAsAAAAACCQAAAO3AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqEAINYATYCJAMMCwgABCAFhG0HQRspB8gOJSHBkAAAAFBmPPy3H+u+mUG1qUUOVbyJJyJeAkQSHhpb8qawTSW0P6VT/y0HgD8IslNExwHglyyTLCwSrAyboMRbp1y3wP9/uNem+LyW5fJeay/uRJ0A44ACGnuRlcgH8W9Ru53Ey9jyT9sJNOpXAK7Or2wEvgrRLxDXDN0HfBs6ZaI41Au1A1OLeABe6tOd4S0A7rPfxy9gCl+SmkwM3T6dNwhmfrX+dRErx1aCzoQA+PtZoM0iYxZQiJNB2zGiiM0iNDoy43R2rSKkvYJjFRnPVdTe9B8vEbWErBnUyXjiqzViE3x16SSQs6IWiTcA/Ae1e8UiNTcPxQRZlqhqk6I0alqzrrfkuI6B8ILGZ2rq0Yc5ew8euhT1Sm16q2zWqnW94sCVI4ejLz+GZ/SGmZZT6qQk8k7dotcsNt/R07EivXk/JG4PbNkHDDd7O/afPXgoSv3QyGidEZmRUervP5+VFb0/mtla+9QCDxw5fD4SKu+bToyAqNeozBCJzICAiQMx2dmxJgbeo4n+ERG+74gvXwiIz6kYJVXalHvG4eEC8T0Zo0Re8qPHao0x+H3UP6XE/jlU6QiwQDZ1YWgGAZv2kw79iU35pP+MS4+xWhfWQMYGawiyfmMV6t/vPXBsm+nkNvMx734aXoU2kvUE3GJsYMwSOBb4MJLFJkdsOnOmTFpzdvtk2de8K6mKc5TFRQ+lp/Tw8NgdMbR7TR21UR/qf67su30yOLtGKjsDzs7ZSE65kNqybHFdMuT2nM7YfcpMklGRs3buNM+NvL2Hgwayh6a1TL6wkQS9AKqHRJA5E4DqAfEs+wuIYH7C+1pPyNT/vgEFfCB1SN7qgRHwDepfgT34pXxmRXGFQp+LzYt4vj3br3kkgHWnCghXp6/rFT3sQkK9ngqSOn2Q1RslFuos1GgyB7XqLUCjGZbZTbrwCFEaMG0dQWh3A5JW7yFr945YqF+gRq9/UKs9CGh0GBFLNhkPxn8Oj/tEPIj6FyFmgHVToVH0z4vrMS05+/i6MKM1Y15ggogsKmknLdiN+T1GCDJtEkUKUTzrQvNpN+x0ssjDs3Y8IBbZRNEzubiYGvpQ0QDrAv5W8LA+ImwQ0m8RhDGA5UYltUX+ne/Xw2gSpz78RFmHsxnGEzCNI6QiJQyiReZmlb3LLQIZzUQkoiAUHssFmU8WzBnEWIhnuJMdNkBUxLYi4jFZsVSN4sqKzle4nm8dNBLL5kiRo2g5wzx2L7axbnoh4/bJxVLq7WMBAAA=') format('woff2'),
+  url('iconfont.woff?t=1594603009144') format('woff'),
+  url('iconfont.ttf?t=1594603009144') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1594603009144#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 35px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* float: right; */
+}
+
+.icon-gerenzhongxin:before {
+  content: "\e649";
+  position: absolute;
+  right: 85px;
+  top: 38px;
+}
+
+.icon-zhuxiao:before {
+  content: "\e66d";
+  position: absolute;
+  right: 35px;
+  top: 38px;
+}
+

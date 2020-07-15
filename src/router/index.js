@@ -5,7 +5,7 @@ import Map from '../views/Map.vue'
 import Echartme from '../views/Echartme.vue'
 import MapVme from '../views/MapVme.vue'
 import Layout from '../views/Layout.vue'
-import MapNew from '../views/MapNew.vue'
+import War from '../views/War.vue'
 
 
 
@@ -33,14 +33,14 @@ Vue.use(VueRouter)
     component: MapVme
   },
   {
-    path: '/',
+    path: '/layout',
     name: 'layout',
     component: Layout
   }, 
   {
-    path: '/mapnew',
-    name: 'mapnew',
-    component: MapNew
+    path: '/war',
+    name: 'war',
+    component: War
   },
   
   // {
