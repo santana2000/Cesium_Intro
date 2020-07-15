@@ -1,12 +1,15 @@
 <template>
   <div class="container">
     <div id="cesiumContainer">
-    </div>
+      <div id="infobox">
 
+      </div>
+    </div>
+    
     <button id="step1" @click="enemyStart">
       step1
     </button> 
-    <button id="step2">
+    <button id="step2" @click="shipError">
       step2
     </button>   
   </div>
@@ -14,6 +17,7 @@
  
 <script>
 import * as Cesium from "@/../node_modules/cesium/Source/Cesium.js"
+import $ from 'jquery';
 
 export default {
   name: "war",
@@ -74,23 +78,17 @@ export default {
       //   { longitude: 113.44, dimension: 9.37, height: 5000, time: 360 },
       //   { longitude: 113.06, dimension: 9.49, height: 5000, time: 440 }
       // ];      
-      // 起始时间
-      let start = Cesium.JulianDate.fromDate(new Date(2017, 7, 11));
-      // 结束时间
-      let stop = Cesium.JulianDate.addSeconds(start,150,new Cesium.JulianDate());
+      
+      let start = Cesium.JulianDate.fromDate(new Date(2017, 7, 11));  // 起始时间
+      let stop = Cesium.JulianDate.addSeconds(start,150,new Cesium.JulianDate()); // 结束时间
 
-      // 设置始时钟始时间
-      _this.viewer.clock.startTime = start.clone();
-      // 设置时钟当前时间
-      _this.viewer.clock.currentTime = start.clone();
-      // 设置始终停止时间
-      _this.viewer.clock.stopTime = stop.clone();
-      // 时间速率，数字越大时间过的越快
-      _this.viewer.clock.multiplier = 10;
-      // 时间轴
-      _this.viewer.timeline.zoomTo(start, stop);
+      _this.viewer.clock.startTime = start.clone();  // 设置始时钟始时间
+      _this.viewer.clock.currentTime = start.clone(); // 设置时钟当前时间     
+      _this.viewer.clock.stopTime = stop.clone();  // 设置始终停止时间 
+      _this.viewer.clock.multiplier = 10; // 时间速率，数字越大时间过的越快
+      _this.viewer.timeline.zoomTo(start, stop); // 时间轴
       // 循环执行,即为2，到达终止时间，重新从起点时间开始
-    //  _this. viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+      // _this. viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP;
      _this. viewer.clock.clockRange = Cesium.ClockRange.CLAMPED;
 
       // for (let j = 0; j < data.length; j++) {
@@ -156,7 +154,10 @@ export default {
         //console.log(property)
         // 添加飞机模型
         let shipModel = _this.viewer.entities.add({
-          // 和时间轴关联
+          
+          id:'ship'+ j,
+          // 和时间轴关联,
+          // name:"  ",
           availability: new Cesium.TimeIntervalCollection([
             new Cesium.TimeInterval({
               start: start,
@@ -205,6 +206,50 @@ export default {
         }
         return property;
       }
+      //点击船出现弹窗------------------------------------------------------------------------
+      var handler = new Cesium.ScreenSpaceEventHandler(_this.viewer.scene.canvas);
+      var shipEntity = _this.viewer.entities.getById('ship1');
+      //获取模型当前位置
+      var shipPosition = shipEntity.position.getValue(_this.viewer.clock.currentTime);
+
+      handler.setInputAction(function (movement) {
+            var pick = _this.viewer.scene.pick(movement.position);
+            var earthPosition = _this.viewer.camera.pickEllipsoid(movement.position,_this.viewer.scene.globe.ellipsoid); //视角穿过球面点的位置
+
+            if (Cesium.defined(pick) && (pick.id.id === 'ship0')) {
+              //console.log(pick);   -----整个对象
+              console.log(shipEntity);
+              // 创建气泡窗体
+              var info = `名称：辽宁舰</br>编号：03279</br>`
+              $("#infobox").empty();
+              $("#infobox").append(info);
+              $("#infobox").show();
+
+              // 气泡位置
+              // var winpos = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+              var winpos = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, earthPosition)
+              console.log("winpos:"+winpos);
+              var bubble = document.getElementById("infobox");
+              bubble.style.left = winpos.x  + 319 + "px";
+              bubble.style.top = winpos.y  + 114 + "px";
+            }
+            else if(Cesium.defined(pick) && (pick.id.id === 'ship1')){
+              console.log(shipPosition);
+              //console.log(pick.id);-----这个实体
+               var info = `名称：山东舰</br>编号：06185</br>`
+              $("#infobox").empty();
+              $("#infobox").append(info);
+              $("#infobox").show();
+              var winpos = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, earthPosition)
+              console.log("winpos:"+winpos);
+              var bubble = document.getElementById("infobox");
+              bubble.style.left = winpos.x  + 319 + "px";
+              bubble.style.top = winpos.y  + 114 + "px";
+            }else{
+              console.log(pick.id.id);
+            }
+
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
     },
     //我方船只出错
     shipError(){
@@ -223,7 +268,7 @@ export default {
       timeline: true, //是否显示时间线控件
       sceneModePicker: false, //是否显示投影方式控件
       navigationHelpButton: false, //是否显示帮助信息控件
-      infoBox: true, //是否显示点击要素之后显示的信息
+      infoBox: false, //是否显示点击要素之后显示的信息
       CreditsDisplay: false,
       shouldAnimate: true,
       terrainProvider: new Cesium.CesiumTerrainProvider({
@@ -276,26 +321,20 @@ export default {
   width: 80%;
   height: 80%;
 }
-#menu {
-  background-color: rgb(226, 226, 226);
-  font-size: 25px;
-  height: 100%;
-  padding-top: 15px;
-  color: dodgerblue;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-ul {
-  list-style: none;
-  padding: 0;
-}
-li {
-  margin-bottom: 15px;
-  color: black;
-  border: white 1px solid;
+#infobox{
+  position: absolute;
+  /* top: 100px;
+  left: 100px; */
+  width: 150px;
+  height: 75px;
+  z-index: 99;
+  background-color:rgba(100, 148, 237, 0.76);
+  border: dodgerblue 1px solid;
+  border-radius: 10px;
+  color: rgb(255, 254, 254);
+  display: none;
+  text-align:center;
+  font-size: 18px;
 }
 
-.el-main {
-  padding: 0 0 0 10px;
-}
 </style>
