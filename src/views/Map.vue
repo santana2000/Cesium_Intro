@@ -85,7 +85,7 @@ export default {
           link.style.display = "none";//a标签隐藏
           document.body.appendChild(link);
           link.click();
-        //   //----------------------------
+       //----------------------------
            // 调用保存到本地的方法下载图片
             // let link = document.createElement("img");
             // link.src = canvas.toDataURL();//下载链接
@@ -154,7 +154,7 @@ export default {
         Cesium.Ion.defaultAccessToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwZTA3YWQ1MC04NGEwLTRiNGItYjlmMC03YmYyYjU2NWY5OTEiLCJpZCI6OTEwMywic2NvcGVzIjpbImFzbCIsImFzciIsImFzdyIsImdjIiwicHIiXSwiaWF0IjoxNTk0MTExNjM0fQ.yUm357eFGBOmUhDba64eAsSpXrYNpRg7cCpwzyz5FjE';
 
     var viewer = new Cesium.Viewer("cesiumContainer",{
-  
+    
         homeButton: false,    //房子图标，视角返回初始位置
         baseLayerPicker: false, //是否显示图层选择控件  
         animation: false,  //是否显示动画控件

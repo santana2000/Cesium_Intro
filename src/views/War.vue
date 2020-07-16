@@ -227,30 +227,68 @@ export default {
 
               // 气泡位置
               // var winpos = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
-              var winpos = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, earthPosition)
+              var winpos = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, shipPosition)
               console.log("winpos:"+winpos);
               var bubble = document.getElementById("infobox");
-              bubble.style.left = winpos.x  + 319 + "px";
-              bubble.style.top = winpos.y  + 114 + "px";
+              bubble.style.left = winpos.x  + 40 + "px";
+              bubble.style.top = winpos.y  + 240 + "px";
+              //位置跟随----------------------------------------------------
+              _this.viewer.scene.postRender.addEventListener(function(e) {
+                var shipEntity = _this.viewer.entities.getById('ship1');
+                var shipPosition = shipEntity.position.getValue(_this.viewer.clock.currentTime);
+                var newpoi = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, shipPosition);
+              // var newpoi = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+              // console.log("newpoi"+ newpoi);
+                  if(winpos.x!=newpoi.x){
+                      
+                      winpos.x = newpoi.x;
+                      winpos.y = newpoi.y;
+                      var bubble = document.getElementById("infobox");
+                      bubble.style.left = winpos.x  + 40 + "px";
+                      bubble.style.top = winpos.y + 240 + "px";
+                  };
+              });//----------------------------------------------------------
             }
             else if(Cesium.defined(pick) && (pick.id.id === 'ship1')){
-              console.log(shipPosition);
+              console.log('船位置'+shipPosition);
+              console.log('earthPosition'+earthPosition);
               //console.log(pick.id);-----这个实体
                var info = `名称：山东舰</br>编号：06185</br>`
               $("#infobox").empty();
               $("#infobox").append(info);
               $("#infobox").show();
-              var winpos = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, earthPosition)
+              var winpos = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, shipPosition)
               console.log("winpos:"+winpos);
               var bubble = document.getElementById("infobox");
-              bubble.style.left = winpos.x  + 319 + "px";
-              bubble.style.top = winpos.y  + 114 + "px";
+              bubble.style.left = winpos.x  + 59 + "px";
+              bubble.style.top = winpos.y  + 34 + "px";
+              //位置跟随----------------------------------------------------
+              _this.viewer.scene.postRender.addEventListener(function(e) {
+                var shipEntity = _this.viewer.entities.getById('ship1');
+                var shipPosition = shipEntity.position.getValue(_this.viewer.clock.currentTime);
+                var newpoi = Cesium.SceneTransforms.wgs84ToWindowCoordinates(_this.viewer.scene, shipPosition);
+              // var newpoi = _this.viewer.scene.cartesianToCanvasCoordinates(earthPosition); //屏幕坐标
+              // console.log("newpoi"+ newpoi);
+                  if(winpos.x!=newpoi.x){
+                      
+                      winpos.x = newpoi.x;
+                      winpos.y = newpoi.y;
+                      var bubble = document.getElementById("infobox");
+                      bubble.style.left = winpos.x  + 59 + "px";
+                      bubble.style.top = winpos.y + 34+ "px";
+                  };
+              });//----------------------------------------------------------
             }else{
-              console.log(pick.id.id);
+//               console.log(pick.id.id);
             }
 
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-    },
+        // 结束查询
+        handler.setInputAction(function(movement) {
+          handler = handler.destroy(); 
+          $("#infobox").hide();
+        }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+  },
     //我方船只出错
     shipError(){
 
@@ -323,8 +361,8 @@ export default {
 }
 #infobox{
   position: absolute;
-  /* top: 100px;
-  left: 100px; */
+  /* top: 100px;*/
+  /* left: 50px;  */
   width: 150px;
   height: 75px;
   z-index: 99;
