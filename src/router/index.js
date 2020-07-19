@@ -12,7 +12,12 @@ import War from '../views/War.vue'
 Vue.use(VueRouter)
 
   const routes = [
-  {
+    {
+      path: '/',
+      name: 'War',
+      component: War
+    },
+    {
     path: '/eleui',
     name: 'EleUI',
     component: EleUI
@@ -37,11 +42,7 @@ Vue.use(VueRouter)
     name: 'layout',
     component: Layout
   }, 
-  {
-    path: '/war',
-    name: 'war',
-    component: War
-  },
+
   
   // {
   //   path: '/about',

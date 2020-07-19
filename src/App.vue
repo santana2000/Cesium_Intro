@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
+        <router-link to="/" class="menu"><el-button class="btn-header" >War</el-button></router-link>&nbsp;
         <router-link to="/eleui" class="menu"><el-button class="btn-header" >Ele-UI</el-button></router-link>&nbsp;
         <router-link to="/chart" class="menu"><el-button class="btn-header">E-chart</el-button></router-link>&nbsp;
         <router-link to="/v"  class="menu">   <el-button class="btn-header">mapV</el-button></router-link>&nbsp;

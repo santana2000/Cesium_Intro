@@ -214,6 +214,34 @@ export default {
             maximumLevel: 18
             })
 
+        viewer.entities.add({
+            polyline:{
+                positions:[
+                    Cesium.Cartesian3.fromDegrees(118.30,9.78,5000  ),
+                    Cesium.Cartesian3.fromDegrees(117.53,9.89,65000 ),
+                    Cesium.Cartesian3.fromDegrees(116.53,9.89,35000 ),
+                    Cesium.Cartesian3.fromDegrees(115.53,9.89,5000 )],
+                width:10,
+                // material: new Cesium.PolylineTrailMaterialProperty({ // 尾迹线材质
+                //     //指定线型的填充颜色，替换为白色。
+                //     color: new Cesium.Color.fromCssColorString("rgba(70,130,180, 1.0)"),
+                //     //指定轮廓线的颜色，可选的黑色。
+                //     outlineColor: new Cesium.Color(70 / 255, 130 / 255, 180 / 255, 0.3),
+                //     //设置尾迹线的长度在整条线中占的比例，替换数值0.3
+                //     trailLength: 0.8,
+                //     //数值属性，设置尾迹线从起点到终点的运行周期，单位是秒，每次转换1000.0。
+                //     period: 3  
+                // }),
+            },
+            billboard :{
+                position:Cesium.Cartesian3.fromDegrees(118.30,9.78,50000 ),
+                image:'/images/navigation.png',
+                width:90,
+                height:90,
+                }
+        });
+        
+
         {       // var tileset = viewer.scene.primitives.add(
                 //     new Cesium.Cesium3DTileset({
                 //         url: Cesium.IonResource.fromAssetId(54482), 
@@ -236,8 +264,15 @@ export default {
         });
 
       
+        viewer.entities.add({
+                position:[Cesium.Cartesian3.fromDegrees(118.30,9.78,550000 )],
+                billboard :{
+                    image:'/images/navigation.png',
+                    width:190,
+                    height:190,
+                }
+        })
 
-       
 
     //mount    
     }   
