@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "cesium": "^1.71.0",
+    "gv-cesium-plugins": "^0.1.4",
+    "cesiumpro": "^0.2.3",
     "core-js": "^3.6.5",
     "echarts": "^4.8.0",
     "element-ui": "^2.13.2",
